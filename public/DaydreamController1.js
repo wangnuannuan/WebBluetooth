@@ -45,10 +45,10 @@ function DaydreamController() {
 
 		        characteristics.forEach(characteristic => {
 		        	//queue2 = queue2.then(_ => characteristic.startNotifications().)
-		        	if (characteristic.properties.notify === true){
+		        	/*if (characteristic.properties.notify === true){
 		        		console.log("check");
 		        		queue2 = queue2.then(_ =>characteristic.startNotifications().then(_ => {characteristic.addEventListener('characteristicvaluechanged',handleBatteryLevelChanged);}));
-		        	}
+		        	}*/
 		        	if (service.uuid === "0000180a-0000-1000-8000-00805f9b34fb"){
 		        		let decoder = new TextDecoder('utf-8');
 		        		switch (characteristic.uuid) {
@@ -206,7 +206,7 @@ function DaydreamController() {
 	}
 
 	function handleBatteryLevelChanged(event) {
-	    console.log("message comes" + event.target.uuid)
+	    console.log("message comes")
 	    let batteryLevel = event.target.value.getUint8(0);
 	    console.log('Battery percentage is ' + batteryLevel);
 	    state = batteryLevel
