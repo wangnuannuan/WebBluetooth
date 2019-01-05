@@ -60,7 +60,7 @@
             if (currentSettings.callback && (currentSettings.callback.trim() !== "")) {
                 var new_val = !isOn;
                 this.onCalculatedValueChanged('value', new_val);
-                this.sendValue(currentSettings.callback, new_val);
+                //this.sendValue(currentSettings.callback, new_val);
             }
         }
 
