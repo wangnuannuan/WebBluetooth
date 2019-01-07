@@ -104,7 +104,7 @@
 			if (!bluetoothDevice) {
 			    return;
 			}
-			log('Disconnecting from Bluetooth Device...');
+			console.log('Disconnecting from Bluetooth Device...');
 			if (bluetoothDevice.gatt.connected) {
 			    bluetoothDevice.gatt.disconnect();
 			} else {
@@ -127,7 +127,7 @@
 			if (bluetoothDevice) {
 				console.log("Always in connected state!");
 			} else {
-				document.querySelector('#test').addEventListener('click', function() {
+				document.querySelector('#connect').addEventListener('click', function() {
 				    if (isWebBluetoothEnabled()) {
 				      //ChromeSamples.clearLog();
 				      //onButtonClick();

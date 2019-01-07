@@ -68,7 +68,7 @@
         this.render = function(element) {
             $(element).append(titleElement).append(indicatorElement).append(stateElement);
             $(indicatorElement).click(this.onClick.bind(this));
-            indicatorElement.attr("id", "test");
+            indicatorElement.attr("id", currentSettings.title);
 
         }
 
@@ -82,7 +82,6 @@
             if (settingName == "value") {
                 isOn = newValue;
             }
-          
 
             updateState();
         }

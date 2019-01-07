@@ -134,6 +134,7 @@
             renderer.setClearColor(0xff0000, 0);
             $('#renderer').append(renderer.domElement);
             $('#renderer canvas').addClass('center-block');  // Center the renderer.
+            $('#renderer').css({"left": "50%"});
 
             // Create white material for the models.
             var material = new THREE.MeshPhongMaterial({ color: 0xffffff });
@@ -214,7 +215,7 @@
         this.onCalculatedValueChanged = function (settingName, newValue) {
           console.log("onCalculatedValueChanged")
           console.log(settingName + ": " + newValue)
-          createWidget()
+          //createWidget()
             if (dataJson[settingName]) {
                 $('#' + settingName).text(newValue);
             }

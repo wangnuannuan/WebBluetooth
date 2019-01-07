@@ -21,11 +21,11 @@ var BlueToothConfig = {
 				{
 					"type": "interactive_indicator",
 					"settings": {
-						"title": "connect status",
+						"title": "connect",
 						"value": "datasources[\"lan\"][\"connected\"]",
 						"callback": "datasources[\"lan\"][\"connected\"]",
-						"on_text": "CONNECTED",
-						"off_text": "DISCONNECTED"
+						"on_text": "",
+						"off_text": ""
 					}
 				}
 			]
