@@ -226,75 +226,84 @@
 			        				}
 			        			)
 			        		);
+			        	}else{
+				        	if (service.uuid === "0000180a-0000-1000-8000-00805f9b34fb"){
+				        		homeStateNew.reported[settings.device]["deviceInfo"] = {};
+				        		let decoder = new TextDecoder('utf-8');
+				        		switch (characteristic.uuid) {
+				    				case BluetoothUUID.getCharacteristic('manufacturer_name_string'):
+				        				queue2 = queue2.then(_ => characteristic.readValue()).then(value => {
+				        					homeStateNew.reported[settings.device]["deviceInfo"]["manufacturer_name_string"] = decoder.decode(value);
+				        				});
+				    				break;
+
+				    				case BluetoothUUID.getCharacteristic('model_number_string'):
+				        				queue2 = queue2.then(_ => characteristic.readValue()).then(value => {
+				        					homeStateNew.reported[settings.device]["deviceInfo"]["model_number_string"] = decoder.decode(value);
+				        				});
+				    				break;
+
+				    				case BluetoothUUID.getCharacteristic('hardware_revision_string'):
+				        				queue2 = queue2.then(_ => characteristic.readValue()).then(value => {
+				        					homeStateNew.reported[settings.device]["deviceInfo"]["hardware_revision_string"] = decoder.decode(value);
+				        				});
+				        				break;
+
+				    				case BluetoothUUID.getCharacteristic('firmware_revision_string'):
+				        				queue2 = queue2.then(_ => characteristic.readValue()).then(value => {
+				        					homeStateNew.reported[settings.device]["deviceInfo"]["firmware_revision_string"] = decoder.decode(value);
+				        				});
+				    				break;
+
+				    				case BluetoothUUID.getCharacteristic('software_revision_string'):
+				        				queue2 = queue2.then(_ => characteristic.readValue()).then(value => {
+				        					homeStateNew.reported[settings.device]["deviceInfo"]["software_revision_string"] = decoder.decode(value);
+				        				});
+				    				break;
+
+				    				case BluetoothUUID.getCharacteristic('system_id'):
+				        				queue2 = queue2.then(_ => characteristic.readValue()).then(value => {
+				            				console.log('> System ID: ');
+				            				homeStateNew.reported[settings.device]["deviceInfo"]["system_manufacturer_id"] = padHex(value.getUint8(4)) + 
+				            					padHex(value.getUint8(3)) + padHex(value.getUint8(2)) + padHex(value.getUint8(1)) + padHex(value.getUint8(0));
+				                			homeStateNew.reported[settings.device]["deviceInfo"]["system_organizationally_id"] = padHex(value.getUint8(7)) + 
+				            					padHex(value.getUint8(6)) + padHex(value.getUint8(5));
+				          				});
+				    				break;
+
+				    				case BluetoothUUID.getCharacteristic('ieee_11073-20601_regulatory_certification_data_list'):
+				          				queue2 = queue2.then(_ => characteristic.readValue()).then(value => {
+				            				console.log('> IEEE 11073-20601 Regulatory Certification Data List: ' +
+				                				decoder.decode(value));
+				          				});
+				    				break;
+
+					    			case BluetoothUUID.getCharacteristic('pnp_id'):
+					        			queue2 = queue2.then(_ => characteristic.readValue()).then(value => {
+					            			homeStateNew.reported[settings.device]["deviceInfo"]["vendor_id_source"] = (value.getUint8(0) === 1 ? 'Bluetooth' : 'USB');
+					            			if (value.getUint8(0) === 1) {
+					            				homeStateNew.reported[settings.device]["deviceInfo"]["vendor_id"] = (value.getUint8(1) | value.getUint8(2) << 8);
+
+					            			} else {
+					            				homeStateNew.reported[settings.device]["deviceInfo"]["vendor_id"] = getUsbVendorName(value.getUint8(1) | value.getUint8(2) << 8);
+					            			}
+					            			homeStateNew.reported[settings.device]["deviceInfo"]["product_id"] = (value.getUint8(3) | value.getUint8(4) << 8);
+					            			homeStateNew.reported[settings.device]["deviceInfo"]["product_version"] = (value.getUint8(5) | value.getUint8(6) << 8);
+					        			});
+					    			break;
+					    			default: console.log('> Unknown Characteristic: ' + characteristic.uuid);
+				        			}
+
+				        	}else {
+				        		homeStateNew.reported[settings.device][service.uuid] = {};
+				        		//let decoder = new TextDecoder('utf-8');
+				        		
+
+				        		homeStateNew.reported[settings.device][service.uuid][characteristic.uuid] = getSupportedProperties(characteristic);
+				        		showdata();
+				        	}
 			        	}
-			        	if (service.uuid === "0000180a-0000-1000-8000-00805f9b34fb"){
-			        		homeStateNew.reported[settings.device]["deviceInfo"] = {};
-			        		let decoder = new TextDecoder('utf-8');
-			        		switch (characteristic.uuid) {
-			    				case BluetoothUUID.getCharacteristic('manufacturer_name_string'):
-			        				queue2 = queue2.then(_ => characteristic.readValue()).then(value => {
-			        					homeStateNew.reported[settings.device]["deviceInfo"]["manufacturer_name_string"] = decoder.decode(value);
-			        				});
-			    				break;
 
-			    				case BluetoothUUID.getCharacteristic('model_number_string'):
-			        				queue2 = queue2.then(_ => characteristic.readValue()).then(value => {
-			        					homeStateNew.reported[settings.device]["deviceInfo"]["model_number_string"] = decoder.decode(value);
-			        				});
-			    				break;
-
-			    				case BluetoothUUID.getCharacteristic('hardware_revision_string'):
-			        				queue2 = queue2.then(_ => characteristic.readValue()).then(value => {
-			        					homeStateNew.reported[settings.device]["deviceInfo"]["hardware_revision_string"] = decoder.decode(value);
-			        				});
-			        				break;
-
-			    				case BluetoothUUID.getCharacteristic('firmware_revision_string'):
-			        				queue2 = queue2.then(_ => characteristic.readValue()).then(value => {
-			        					homeStateNew.reported[settings.device]["deviceInfo"]["firmware_revision_string"] = decoder.decode(value);
-			        				});
-			    				break;
-
-			    				case BluetoothUUID.getCharacteristic('software_revision_string'):
-			        				queue2 = queue2.then(_ => characteristic.readValue()).then(value => {
-			        					homeStateNew.reported[settings.device]["deviceInfo"]["software_revision_string"] = decoder.decode(value);
-			        				});
-			    				break;
-
-			    				case BluetoothUUID.getCharacteristic('system_id'):
-			        				queue2 = queue2.then(_ => characteristic.readValue()).then(value => {
-			            				console.log('> System ID: ');
-			            				homeStateNew.reported[settings.device]["deviceInfo"]["system_manufacturer_id"] = padHex(value.getUint8(4)) + 
-			            					padHex(value.getUint8(3)) + padHex(value.getUint8(2)) + padHex(value.getUint8(1)) + padHex(value.getUint8(0));
-			                			homeStateNew.reported[settings.device]["deviceInfo"]["system_organizationally_id"] = padHex(value.getUint8(7)) + 
-			            					padHex(value.getUint8(6)) + padHex(value.getUint8(5));
-			          				});
-			    				break;
-
-			    				case BluetoothUUID.getCharacteristic('ieee_11073-20601_regulatory_certification_data_list'):
-			          				queue2 = queue2.then(_ => characteristic.readValue()).then(value => {
-			            				console.log('> IEEE 11073-20601 Regulatory Certification Data List: ' +
-			                				decoder.decode(value));
-			          				});
-			    				break;
-
-				    			case BluetoothUUID.getCharacteristic('pnp_id'):
-				        			queue2 = queue2.then(_ => characteristic.readValue()).then(value => {
-				            			homeStateNew.reported[settings.device]["deviceInfo"]["vendor_id_source"] = (value.getUint8(0) === 1 ? 'Bluetooth' : 'USB');
-				            			if (value.getUint8(0) === 1) {
-				            				homeStateNew.reported[settings.device]["deviceInfo"]["vendor_id"] = (value.getUint8(1) | value.getUint8(2) << 8);
-
-				            			} else {
-				            				homeStateNew.reported[settings.device]["deviceInfo"]["vendor_id"] = getUsbVendorName(value.getUint8(1) | value.getUint8(2) << 8);
-				            			}
-				            			homeStateNew.reported[settings.device]["deviceInfo"]["product_id"] = (value.getUint8(3) | value.getUint8(4) << 8);
-				            			homeStateNew.reported[settings.device]["deviceInfo"]["product_version"] = (value.getUint8(5) | value.getUint8(6) << 8);
-				        			});
-				    			break;
-				    			default: console.log('> Unknown Characteristic: ' + characteristic.uuid);
-			        			}
-
-			        	}
 			        });
 			        return queue2
 			      }));
@@ -317,7 +326,131 @@
 		      supportedProperties.push(p.toUpperCase());
 		    }
 		  }
-		  console.log(supportedProperties)
+		  console.log(supportedProperties);
+		  return supportedProperties.join(",")
+		}
+		function showdata(){
+			var receiveDevice, receiveService, receiveCharacteristic;
+			for (receiveDevice in homeStateNew.reported) {
+				if (homeStateNew.reported[receiveDevice] === null) {
+					//delete UI
+				} else {
+					console.log(panesLoaded[receiveDevice])
+					if (homeState.state.reported[receiveDevice] === undefined || panesLoaded[receiveDevice] === undefined) { //&&
+							//add UI
+							
+						for (receiveService in homeStateNew.reported[receiveDevice]) {
+							if (receiveService === "deviceInfo") {
+								var pane = {};
+								var widgets = [];
+								var widget = {};
+								pane.title = receiveService;
+								pane.width = 1;
+								pane.col_width = 1;
+								pane.row = {
+									"1": row[0][0] + row[0][1] - 5,
+									"2": row[0][col[0]],
+									"3": row[1][col[1]]
+								};
+								pane.col = {
+									"1": 1,
+									"2": col[0] + 1,
+									"3": col[1] + 1
+								};
+
+								for (receiveCharacteristic in homeStateNew.reported[receiveDevice][receiveService]) {
+									widget.type = "text_widget";
+									widget.settings = {
+										"title": receiveCharacteristic,
+										"size": "regular",
+										"value": 'datasources["' + ["lan", "state", "reported", receiveDevice, receiveService, receiveCharacteristic].join('"]["') + '"]',
+										"animate": true
+									};
+									row[0][col[0]] += 2;
+									row[1][col[1]] += 2;
+									widgets.push(widget);
+									widget = {};
+								}
+								pane.widgets = widgets;
+								freeboard.addPane(pane);
+								col[0] += 1;
+								col[0] %= 2;
+								col[1] += 1;
+								col[1] %= 3;
+								panesLoaded[receiveDevice] = true;
+							}else{
+								var pane = {};
+								var widgets = [];
+								var widget = {};
+								pane.title = characteristicsSet[receiveService];
+								pane.width = 1;
+								pane.col_width = 1;
+								pane.row = {
+									"1": row[0][0] + row[0][1] - 5,
+									"2": row[0][col[0]],
+									"3": row[1][col[1]]
+								};
+								pane.col = {
+									"1": 1,
+									"2": col[0] + 1,
+									"3": col[1] + 1
+								};
+
+								for (receiveCharacteristic in homeStateNew.reported[receiveDevice][receiveService]) {
+									console.log(receiveService + ":" +receiveCharacteristic )
+									widget.type = "text_widget";
+									if (characteristicsSet[receiveService] === "battery_level"){
+										widget.type = "gauge";
+									}
+									widget.settings = {
+										"title": receiveService,
+										"size": "regular",
+										"value": 'datasources["' + ["lan", "state", "reported", receiveDevice, receiveService, receiveCharacteristic].join('"]["') + '"]',
+										"animate": true
+									};
+									row[0][col[0]] += 2;
+									row[1][col[1]] += 2;
+									widgets.push(widget);
+									widget = {};
+								}
+								pane.widgets = widgets;
+								freeboard.addPane(pane);
+								col[0] += 1;
+								col[0] %= 2;
+								col[1] += 1;
+								col[1] %= 3;
+								panesLoaded[receiveDevice] = true;
+							}
+
+						}
+						
+					}
+					
+				}
+			}
+			for (key in homeStateNew) {
+				if (homeState.state[key] === undefined) {
+					homeState.state[key] = {};
+				}
+				for (receiveDevice in homeStateNew[key]) {
+					if (homeStateNew[key][receiveDevice] === null) {
+						homeState.state[key][receiveDevice] = undefined;
+					} else {
+						if (homeState.state[key][receiveDevice] === undefined) {
+							homeState.state[key][receiveDevice] = {};
+						}
+						for (receiveService in homeStateNew[key][receiveDevice]) {
+							if (homeState.state[key][receiveDevice][receiveService] === undefined) {
+								homeState.state[key][receiveDevice][receiveService] = {};
+							}
+							for (receiveCharacteristic in homeStateNew[key][receiveDevice][receiveService]) {
+								homeState.state[key][receiveDevice][receiveService][receiveCharacteristic] = homeStateNew[key][receiveDevice][receiveService][receiveCharacteristic];
+							}
+						}
+					}
+				}
+			}
+			updateCallback(homeState);
 		}
 
 		function onDisconnected(event) {
@@ -454,6 +587,7 @@
 
 		function getHomeState() {
 			if (bluetoothDevice.gatt.connected) {
+
 				//////////////////////client.sendMessage("{}");
 			}
 		}

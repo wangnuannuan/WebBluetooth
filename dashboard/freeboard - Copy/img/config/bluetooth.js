@@ -29,7 +29,7 @@ var BlueToothConfig = {
 					}
 				}
 			]
-		},
+		}/*,
 		{
 			"width": 1,
 			"row": {
@@ -62,14 +62,14 @@ var BlueToothConfig = {
 					}
 				}
 			]
-		}
+		}*/
 	],
 	"datasources": [
 		{
 			"name": "lan",
 			"type": "bluetooth_client",
 			"settings": {
-				"device": "embARC",
+				"device": "ble_battery",
 				"refresh_time": 500,
 				"name": "lan"
 			}
